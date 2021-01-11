@@ -1,2 +1,2 @@
 # codechallengeproximity
-Vendin Machine
+Vending Machine
