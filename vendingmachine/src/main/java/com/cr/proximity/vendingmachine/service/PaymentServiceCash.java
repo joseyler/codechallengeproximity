@@ -76,6 +76,12 @@ public class PaymentServiceCash implements PaymentService {
 		currentTransaccion.setTransactionCash(0.0);
 	}
 
+	/**
+	 * 
+	 * @param changeAmount
+	 * @return
+	 * @throws VendingMachineException
+	 */
 	private Map<PaymentMethod, Integer> calculateChange(double changeAmount) throws VendingMachineException {
 		double diff = changeAmount;
 		Map<PaymentMethod, Integer> change = new EnumMap<PaymentMethod, Integer>(PaymentMethod.class);
@@ -86,12 +92,11 @@ public class PaymentServiceCash implements PaymentService {
 				coinTimes--;
 			}
 			diff -= c.getAmount() * coinTimes;
-
 			if(coinTimes > 0) {
 				change.put(c, coinTimes);			
 			}
 		}
-
+		
 		return change;
 	}
 	 
