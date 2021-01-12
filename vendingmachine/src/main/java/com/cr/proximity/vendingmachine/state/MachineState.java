@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.cr.proximity.vendingmachine.model.CreditCardInfo;
+import com.cr.proximity.vendingmachine.model.Item;
 import com.cr.proximity.vendingmachine.model.ItemStock;
 import com.cr.proximity.vendingmachine.model.ItemTransaction;
 import com.cr.proximity.vendingmachine.model.State;
@@ -151,5 +152,48 @@ public class MachineState {
 		return null;
 	}
 	
+	
+	public void initializeMachine() {
+		this.getCashStock().put(PaymentMethod.CENTS_5,50);
+		this.getCashStock().put(PaymentMethod.CENTS_10,50);
+		this.getCashStock().put(PaymentMethod.CENTS_25,50);
+		this.getCashStock().put(PaymentMethod.CENTS_50,50);
+		this.getCashStock().put(PaymentMethod.DOLLAR_1,50);
+		this.getCashStock().put(PaymentMethod.DOLLAR_2,50);
+		
+		this.setCurrentCash(this.countCurrentCash());
+		
+		Item it = new Item();
+		it.setCode(4558);
+		it.setName("Coke");
+		it.setUnitPrice(1.2);
+		it.setId(1);
+		ItemStock itStk = new ItemStock();
+		itStk.setItem(it);
+		itStk.setQuantity(20);
+		this.getItemsStock().add(itStk);
+		
+		it = new Item();
+		it.setCode(4332);
+		it.setName("Diet-Coke");
+		it.setUnitPrice(1.0);
+		it.setId(2);
+		itStk = new ItemStock();
+		itStk.setItem(it);
+		itStk.setQuantity(20);
+		this.getItemsStock().add(itStk);
+		
+		it = new Item();
+		it.setCode(4332);
+		it.setName("Sprite");
+		it.setUnitPrice(0.8);
+		it.setId(3);
+		itStk = new ItemStock();
+		itStk.setItem(it);
+		itStk.setQuantity(20);
+		this.getItemsStock().add(itStk);
+		
+		this.printMachineState();
+	}
 	
 }

@@ -34,4 +34,10 @@ public interface TransactionsService {
 	 */
 	public void processTransactions() throws VendingMachineException;
 
+	/**
+	 * 
+	 * @throws VendingMachineException
+	 */
+	public void initializeMachine() throws VendingMachineException;
+
 }

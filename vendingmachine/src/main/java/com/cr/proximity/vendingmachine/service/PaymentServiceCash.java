@@ -35,7 +35,7 @@ public class PaymentServiceCash implements PaymentService {
 		try {
 			Integer quantity = this.machineState.getCashStock().get(paymentMethod);
 			if (quantity != null) {
-				this.machineState.getCashStock().put(paymentMethod, quantity++);
+				this.machineState.getCashStock().put(paymentMethod, ++quantity);
 			} else {
 				this.machineState.getCashStock().put(paymentMethod, 1);
 			}

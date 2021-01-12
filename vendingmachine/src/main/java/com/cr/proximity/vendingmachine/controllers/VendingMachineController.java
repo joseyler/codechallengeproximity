@@ -30,6 +30,17 @@ public class VendingMachineController extends AbstractVMController {
 		super();
 		this.transactionSevice = transactionSevice;
 	}
+	
+	@PutMapping(value = "/initialize", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Object> addCash() {
+        try {
+        	transactionSevice.initializeMachine();
+            return new ResponseEntity<Object>( HttpStatus.OK);
+        } catch (VendingMachineException vme) {
+            return processVMException(vme);
+        }
+    }
 
 	@PostMapping(value = "/cash", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

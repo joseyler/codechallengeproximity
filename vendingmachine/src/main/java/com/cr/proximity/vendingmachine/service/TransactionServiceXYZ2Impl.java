@@ -15,8 +15,8 @@ public class TransactionServiceXYZ2Impl extends TransactionServiceXYZ1Impl {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TransactionServiceXYZ2Impl.class);
 
 	@Override
-	protected void initialize() {
-		super.initialize();
+	protected void initializeTrxService() {
+		super.initializeTrxService();
 		paymentsAvailables.put(PaymentMethod.CREDIT_CARD.getCode(), Boolean.TRUE);
 	}
 

@@ -88,9 +88,14 @@ public class TransactionServiceFacade implements TransactionsService {
 	public void processTransactions() throws VendingMachineException {
 		List<TransactionVMEntity> trxs = transactionVMRepository.findByRegistered(false);
 		for (TransactionVMEntity trx : trxs) {
-			
+			//trx.se
 		}
 		
+	}
+
+	@Override
+	public void initializeMachine() throws VendingMachineException {
+		this.machineState.initializeMachine();
 	}
 
 }

@@ -31,11 +31,11 @@ public class TransactionServiceXYZ1Impl implements TransactionsService {
 		paymentsAvailables = new HashMap<Integer,Boolean>();
 		this.paymentServiceStrategy = paymentServiceStrategy;
 		this.machineState = machineState;
-		initialize();
+		initializeTrxService();
 	}
 
 
-	protected void initialize() {
+	protected void initializeTrxService() {
 		paymentsAvailables.put(PaymentMethod.CENTS_5.getCode(), Boolean.TRUE);
 		paymentsAvailables.put(PaymentMethod.CENTS_25.getCode(), Boolean.TRUE);
 		paymentsAvailables.put(PaymentMethod.CENTS_50.getCode(), Boolean.TRUE);
@@ -119,6 +119,13 @@ public class TransactionServiceXYZ1Impl implements TransactionsService {
 
 	@Override
 	public void processTransactions() throws VendingMachineException {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void initializeMachine() throws VendingMachineException {
 		// TODO Auto-generated method stub
 		
 	}
