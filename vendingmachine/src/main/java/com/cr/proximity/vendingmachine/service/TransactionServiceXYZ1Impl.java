@@ -7,10 +7,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.cr.proximity.vendingmachine.exceptions.BadRequestException;
+import com.cr.proximity.vendingmachine.exceptions.InvalidaStateVMException;
 import com.cr.proximity.vendingmachine.exceptions.VendingMachineException;
 import com.cr.proximity.vendingmachine.model.Item;
+import com.cr.proximity.vendingmachine.model.ItemTransaction;
 import com.cr.proximity.vendingmachine.model.transaction.Payment;
 import com.cr.proximity.vendingmachine.model.transaction.PaymentMethod;
+import com.cr.proximity.vendingmachine.state.MachineState;
 
 public class TransactionServiceXYZ1Impl implements TransactionsService {
 	
@@ -20,10 +23,13 @@ public class TransactionServiceXYZ1Impl implements TransactionsService {
 	
 	protected PaymentServiceStrategy paymentServiceStrategy;
 
-	public TransactionServiceXYZ1Impl(PaymentServiceStrategy paymentServiceStrategy) {
+	private MachineState machineState;
+
+	public TransactionServiceXYZ1Impl(PaymentServiceStrategy paymentServiceStrategy,MachineState machineState) {
 		super();
 		paymentsAvailables = new HashMap<Integer,Boolean>();
 		this.paymentServiceStrategy = paymentServiceStrategy;
+		this.machineState = machineState;
 		initialize();
 	}
 
@@ -58,15 +64,40 @@ public class TransactionServiceXYZ1Impl implements TransactionsService {
 
 	@Override
 	public void addItem(Item item) throws VendingMachineException {
-		
-		
+		ItemTransaction currentTransaccion = machineState.getCurrentTransaccion();
+		if (currentTransaccion==null) {
+			//select item start a new transaction
+			currentTransaccion = new ItemTransaction();
+			machineState.setCurrentTransaccion(currentTransaccion);
+		}
+		currentTransaccion.getItems().add(item);
 	}
 
 
 	@Override
-	public void endTransaction() throws VendingMachineException {
-		// TODO Auto-generated method stub
+	public ItemTransaction endTransaction() throws VendingMachineException {
+		ItemTransaction currentTransaccion = machineState.getCurrentTransaccion();
+		validateTransaction(currentTransaccion);
+		paymentServiceStrategy.getPaymentService(currentTransaccion.getPaymentMethod()).cashout(currentTransaccion);
 		
+		return currentTransaccion;
+	}
+
+	/**
+	 * 
+	 * @param currentTransaccion
+	 * @throws InvalidaStateVMException
+	 */
+	private void validateTransaction(ItemTransaction currentTransaccion) throws InvalidaStateVMException {
+		if (currentTransaccion==null) {
+			throw new InvalidaStateVMException("No transaction present");
+		}
+		if (currentTransaccion.getItems().isEmpty()) {
+			throw new InvalidaStateVMException("Transaction has no items selected");
+		}
+		if (currentTransaccion.getPaymentMethod()==null) {
+			throw new InvalidaStateVMException("Transaction has no payment method selected");
+		}
 	}
 
 }

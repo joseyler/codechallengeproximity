@@ -11,6 +11,7 @@ public class ItemTransaction {
 	private double transactionAmount;
 	private double transactionCash;
 	private PaymentMethod paymentMethod;
+	private String externalReference;
 	
 	public ItemTransaction() {
 		super();
@@ -63,6 +64,18 @@ public class ItemTransaction {
 	 */
 	public void setPaymentMethod(PaymentMethod paymentMethod) {
 		this.paymentMethod = paymentMethod;
+	}
+	/**
+	 * @return the externalReference
+	 */
+	public String getExternalReference() {
+		return externalReference;
+	}
+	/**
+	 * @param externalReference the externalReference to set
+	 */
+	public void setExternalReference(String externalReference) {
+		this.externalReference = externalReference;
 	}
 	
 	

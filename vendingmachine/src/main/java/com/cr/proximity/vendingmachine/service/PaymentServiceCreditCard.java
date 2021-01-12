@@ -4,10 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.cr.proximity.vendingmachine.exceptions.InvalidaStateVMException;
 import com.cr.proximity.vendingmachine.exceptions.PaymentException;
 import com.cr.proximity.vendingmachine.exceptions.VendingMachineException;
 import com.cr.proximity.vendingmachine.model.ItemTransaction;
@@ -48,10 +48,21 @@ public class PaymentServiceCreditCard implements PaymentService {
             //restTemplate.exchange(url, HttpMethod.POST, request, Void.class);
             //success payment
             currentTransaccion.setTransactionCash(currentTransaccion.getTransactionAmount());
+            currentTransaccion.setExternalReference("paymentCodeExternal");;
         }  catch (Exception e) {
             LOGGER.error("Error calling payment site", e);
             throw new PaymentException("Error calling payment site: " + e.getMessage());
         }
+	}
+
+
+	@Override
+	public void cashout(ItemTransaction currentTransaccion) throws VendingMachineException {
+		//credit card already paid. Verify external reference
+		if (currentTransaccion.getExternalReference()==null) {
+			throw new InvalidaStateVMException("No credit card payment present");
+		}
+		
 	}
 
 

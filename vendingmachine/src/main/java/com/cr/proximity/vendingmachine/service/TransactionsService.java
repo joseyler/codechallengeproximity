@@ -2,6 +2,7 @@ package com.cr.proximity.vendingmachine.service;
 
 import com.cr.proximity.vendingmachine.exceptions.VendingMachineException;
 import com.cr.proximity.vendingmachine.model.Item;
+import com.cr.proximity.vendingmachine.model.ItemTransaction;
 import com.cr.proximity.vendingmachine.model.transaction.Payment;
 
 public interface TransactionsService {
@@ -22,8 +23,9 @@ public interface TransactionsService {
 
 	/**
 	 * 
+	 * @return
 	 * @throws VendingMachineException
 	 */
-	public void endTransaction()  throws VendingMachineException;
+	public ItemTransaction endTransaction()  throws VendingMachineException;
 
 }
