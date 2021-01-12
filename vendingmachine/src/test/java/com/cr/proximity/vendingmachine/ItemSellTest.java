@@ -93,7 +93,22 @@ public class ItemSellTest {
 		payment.setCode(PaymentMethod.CENTS_25.getCode());
         this.mockMvc.perform(post("/v1/vmachine/cash").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsBytes(payment)))
                 .andExpect(status().isCreated());
-//                .andExpect(jsonPath("$.size()", is(userList.size())));
+        
+        payment = new Payment();
+		payment.setCode(PaymentMethod.CENTS_50.getCode());
+        this.mockMvc.perform(post("/v1/vmachine/cash").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsBytes(payment)))
+                .andExpect(status().isCreated());
+        
+        payment = new Payment();
+		payment.setCode(PaymentMethod.CENTS_10.getCode());
+        this.mockMvc.perform(post("/v1/vmachine/cash").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsBytes(payment)))
+                .andExpect(status().isCreated());
+        
+        payment = new Payment();
+		payment.setCode(PaymentMethod.CENTS_10.getCode());
+        this.mockMvc.perform(post("/v1/vmachine/cash").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsBytes(payment)))
+                .andExpect(status().isCreated());
+        
         
         
     }

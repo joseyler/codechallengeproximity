@@ -6,6 +6,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import com.cr.proximity.vendingmachine.exceptions.VendingMachineException;
+import com.cr.proximity.vendingmachine.model.Item;
 import com.cr.proximity.vendingmachine.model.transaction.Payment;
 
 @Service("TransactionsService")
@@ -16,10 +17,13 @@ public class TransactionServiceFacade implements TransactionsService {
 	private Environment environment;
 	
 	private TransactionsService serviceImpl;
+	
+	private PaymentServiceStrategy paymentServiceStrategy;
 
-	public TransactionServiceFacade(Environment environment) {
+	public TransactionServiceFacade(Environment environment,PaymentServiceStrategy paymentServiceStrategy) {
 		super();
 		this.environment = environment;
+		this.paymentServiceStrategy = paymentServiceStrategy;
 		configure();
 	}
 
@@ -30,10 +34,10 @@ public class TransactionServiceFacade implements TransactionsService {
 		
 		switch (model) {
 		case "XYZ1":
-			this.serviceImpl = new TransactionServiceXYZ1Impl();
+			this.serviceImpl = new TransactionServiceXYZ1Impl(paymentServiceStrategy);
 			break;
 		case "XYZ2":
-			this.serviceImpl = new TransactionServiceXYZ2Impl();
+			this.serviceImpl = new TransactionServiceXYZ2Impl(paymentServiceStrategy);
 			break;
 		default:
 			throw new RuntimeException("Configuration error, model not supported");
@@ -43,6 +47,18 @@ public class TransactionServiceFacade implements TransactionsService {
 	@Override
 	public void addCash(Payment payment) throws VendingMachineException {
 		this.serviceImpl.addCash(payment);
+	}
+
+	@Override
+	public void addItem(Item item) throws VendingMachineException {
+		this.serviceImpl.addItem(item);
+		
+	}
+
+	@Override
+	public void endTransaction() throws VendingMachineException {
+		this.serviceImpl.endTransaction();
+		
 	}
 
 }

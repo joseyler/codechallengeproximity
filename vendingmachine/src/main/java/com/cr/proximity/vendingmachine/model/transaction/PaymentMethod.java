@@ -39,6 +39,20 @@ public enum PaymentMethod {
 	public boolean isCash() {
 		return cash;
 	}
+
+	/**
+	 * 
+	 * @param codeQuery
+	 * @return
+	 */
+	public static PaymentMethod getPaymentMethod(int codeQuery) {
+		for (PaymentMethod payMethod: PaymentMethod.values()) {
+			if (payMethod.getCode() == codeQuery) {
+				return payMethod;
+			}
+		}
+		return null;
+	}
 	
 	
 	

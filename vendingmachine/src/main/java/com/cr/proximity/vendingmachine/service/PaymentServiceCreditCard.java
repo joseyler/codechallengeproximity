@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.cr.proximity.vendingmachine.exceptions.PaymentException;
 import com.cr.proximity.vendingmachine.exceptions.VendingMachineException;
+import com.cr.proximity.vendingmachine.model.ItemTransaction;
 import com.cr.proximity.vendingmachine.model.external.ExternalPaymentModel;
 import com.cr.proximity.vendingmachine.model.transaction.PaymentMethod;
 import com.cr.proximity.vendingmachine.state.MachineState;
@@ -21,27 +22,32 @@ public class PaymentServiceCreditCard implements PaymentService {
 	
 	private MachineState machineState;
 	
-	private RestTemplate restTemplate;
-	
-	
 
-	public PaymentServiceCreditCard(MachineState machineState,RestTemplate restTemplate) {
+	public PaymentServiceCreditCard(MachineState machineState) {
 		super();
 		this.machineState = machineState;
-		this.restTemplate = restTemplate;
 	}
 
 
-
 	@Override
-	public void performPayment(PaymentMethod payment,double amount) throws VendingMachineException {
-		ExternalPaymentModel modelPost = new ExternalPaymentModel(machineState.getCreditCardInfo(),amount);
+	public void performPayment(PaymentMethod payment) throws VendingMachineException {
+		
+		ItemTransaction currentTransaccion = machineState.getCurrentTransaccion();
+		if (currentTransaccion==null || currentTransaccion.getTransactionAmount() == 0) {
+			throw new PaymentException("No payment required or transaction is not present");
+		}
+		
+		ExternalPaymentModel modelPost = new ExternalPaymentModel(machineState.getCreditCardInfo(),currentTransaccion.getTransactionAmount());
 		try {
             String url = "https://urlexternalpaymentSite.com";
             HttpHeaders headers = new HttpHeaders();
             headers.add("Authorization", "JWTAUTH");
             HttpEntity<ExternalPaymentModel> request = new HttpEntity<ExternalPaymentModel>(modelPost,headers);
-            restTemplate.exchange(url, HttpMethod.POST, request, Void.class);
+            RestTemplate restTemplate = new RestTemplate();
+            //commented for test success payment
+            //restTemplate.exchange(url, HttpMethod.POST, request, Void.class);
+            //success payment
+            currentTransaccion.setTransactionCash(currentTransaccion.getTransactionAmount());
         }  catch (Exception e) {
             LOGGER.error("Error calling payment site", e);
             throw new PaymentException("Error calling payment site: " + e.getMessage());

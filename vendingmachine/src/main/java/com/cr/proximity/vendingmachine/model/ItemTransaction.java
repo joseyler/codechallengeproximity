@@ -3,14 +3,14 @@ package com.cr.proximity.vendingmachine.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.cr.proximity.vendingmachine.model.transaction.PaymentMethod;
+
 public class ItemTransaction {
 	
 	private List<Item> items;
 	private double transactionAmount;
 	private double transactionCash;
-	
-	
-	
+	private PaymentMethod paymentMethod;
 	
 	public ItemTransaction() {
 		super();
@@ -51,6 +51,18 @@ public class ItemTransaction {
 	 */
 	public void setTransactionCash(double transactionCash) {
 		this.transactionCash = transactionCash;
+	}
+	/**
+	 * @return the paymentMethod
+	 */
+	public PaymentMethod getPaymentMethod() {
+		return paymentMethod;
+	}
+	/**
+	 * @param paymentMethod the paymentMethod to set
+	 */
+	public void setPaymentMethod(PaymentMethod paymentMethod) {
+		this.paymentMethod = paymentMethod;
 	}
 	
 	

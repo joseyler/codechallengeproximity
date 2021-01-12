@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.cr.proximity.vendingmachine.exceptions.PaymentException;
 import com.cr.proximity.vendingmachine.exceptions.VendingMachineException;
+import com.cr.proximity.vendingmachine.model.ItemTransaction;
 import com.cr.proximity.vendingmachine.model.transaction.PaymentMethod;
 import com.cr.proximity.vendingmachine.state.MachineState;
 
@@ -22,7 +23,7 @@ public class PaymentServiceCash implements PaymentService {
 	}
 
 	@Override
-	public void performPayment(PaymentMethod paymentMethod,double amount) throws VendingMachineException {
+	public void performPayment(PaymentMethod paymentMethod) throws VendingMachineException {
 		try {
 			Integer quantity = this.machineState.getCashStock().get(paymentMethod);
 			if (quantity != null) {
@@ -30,7 +31,16 @@ public class PaymentServiceCash implements PaymentService {
 			} else {
 				this.machineState.getCashStock().put(paymentMethod, 1);
 			}
-			this.machineState.setCurrentCash(this.machineState.getCurrentCash() + amount);
+			this.machineState.setCurrentCash(this.machineState.getCurrentCash() + paymentMethod.getAmount());
+			
+			ItemTransaction currentTransaccion = machineState.getCurrentTransaccion();
+			if (currentTransaccion==null) {
+				//insert money start a new transaction
+				currentTransaccion = new ItemTransaction();
+				machineState.setCurrentTransaccion(currentTransaccion);
+			}
+			currentTransaccion.setTransactionCash(currentTransaccion.getTransactionCash() + paymentMethod.getAmount());
+			
 		} catch (Exception e) {
 			LOGGER.error("Error performing cash payment", e);
             throw new PaymentException("Error performing cash payment: " + e.getMessage());

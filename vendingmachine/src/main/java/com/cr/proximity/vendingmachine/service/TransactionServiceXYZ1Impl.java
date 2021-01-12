@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.cr.proximity.vendingmachine.exceptions.BadRequestException;
 import com.cr.proximity.vendingmachine.exceptions.VendingMachineException;
+import com.cr.proximity.vendingmachine.model.Item;
 import com.cr.proximity.vendingmachine.model.transaction.Payment;
 import com.cr.proximity.vendingmachine.model.transaction.PaymentMethod;
 
@@ -16,10 +17,13 @@ public class TransactionServiceXYZ1Impl implements TransactionsService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TransactionServiceXYZ1Impl.class);
 
 	protected Map<Integer,Boolean> paymentsAvailables;
+	
+	protected PaymentServiceStrategy paymentServiceStrategy;
 
-	public TransactionServiceXYZ1Impl() {
+	public TransactionServiceXYZ1Impl(PaymentServiceStrategy paymentServiceStrategy) {
 		super();
 		paymentsAvailables = new HashMap<Integer,Boolean>();
+		this.paymentServiceStrategy = paymentServiceStrategy;
 		initialize();
 	}
 
@@ -38,7 +42,9 @@ public class TransactionServiceXYZ1Impl implements TransactionsService {
 	@Override
 	public void addCash(Payment payment) throws VendingMachineException {
 		if (isValidPayment(payment.getCode())) {
-			
+			PaymentMethod paymentMethod = PaymentMethod.getPaymentMethod(payment.getCode());
+			PaymentService paymentService = paymentServiceStrategy.getPaymentService(paymentMethod);
+			paymentService.performPayment(paymentMethod);
 		} else {
 			throw new BadRequestException("Payment code is invalid");
 		}
@@ -47,6 +53,20 @@ public class TransactionServiceXYZ1Impl implements TransactionsService {
 
 	private boolean isValidPayment(Integer code) {
 		return this.paymentsAvailables.get(code) !=null;
+	}
+
+
+	@Override
+	public void addItem(Item item) throws VendingMachineException {
+		
+		
+	}
+
+
+	@Override
+	public void endTransaction() throws VendingMachineException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

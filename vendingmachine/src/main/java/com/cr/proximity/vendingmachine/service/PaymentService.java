@@ -11,6 +11,6 @@ public interface PaymentService {
 	 * @param amount
 	 * @throws VendingMachineException
 	 */
-	public void performPayment(PaymentMethod paymentMethod,double amount)  throws VendingMachineException;
+	public void performPayment(PaymentMethod paymentMethod)  throws VendingMachineException;
 
 }
