@@ -7,7 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.cr.proximity.vendingmachine.exceptions.InvalidaStateVMException;
+import com.cr.proximity.vendingmachine.exceptions.InvalidStateVMException;
 import com.cr.proximity.vendingmachine.exceptions.PaymentException;
 import com.cr.proximity.vendingmachine.exceptions.VendingMachineException;
 import com.cr.proximity.vendingmachine.model.ItemTransaction;
@@ -60,7 +60,7 @@ public class PaymentServiceCreditCard implements PaymentService {
 	public void cashout(ItemTransaction currentTransaccion) throws VendingMachineException {
 		//credit card already paid. Verify external reference
 		if (currentTransaccion.getExternalReference()==null) {
-			throw new InvalidaStateVMException("No credit card payment present");
+			throw new InvalidStateVMException("No credit card payment present");
 		}
 		
 	}

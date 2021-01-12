@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.cr.proximity.vendingmachine.exceptions.BadRequestException;
-import com.cr.proximity.vendingmachine.exceptions.InvalidaStateVMException;
+import com.cr.proximity.vendingmachine.exceptions.InvalidStateVMException;
 import com.cr.proximity.vendingmachine.exceptions.PaymentException;
 import com.cr.proximity.vendingmachine.exceptions.VendingMachineException;
 
@@ -28,7 +28,7 @@ public class AbstractVMController {
 	            LOGGER.warn(vme.getMessage());
 	            return new ResponseEntity<Object>(vme.getMessage(),HttpStatus.PAYMENT_REQUIRED);
 	        }
-	        if (vme instanceof InvalidaStateVMException) {
+	        if (vme instanceof InvalidStateVMException) {
 	            LOGGER.info(vme.getMessage());
 	            return new ResponseEntity<Object>(vme.getMessage(),HttpStatus.NOT_ACCEPTABLE);
 	        }

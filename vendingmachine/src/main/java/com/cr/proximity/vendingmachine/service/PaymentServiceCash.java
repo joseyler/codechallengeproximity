@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.cr.proximity.vendingmachine.exceptions.InvalidaStateVMException;
+import com.cr.proximity.vendingmachine.exceptions.InvalidStateVMException;
 import com.cr.proximity.vendingmachine.exceptions.PaymentException;
 import com.cr.proximity.vendingmachine.exceptions.VendingMachineException;
 import com.cr.proximity.vendingmachine.machine.VendingMachineInterface;
@@ -61,7 +61,7 @@ public class PaymentServiceCash implements PaymentService {
 	@Override
 	public void cashout(ItemTransaction currentTransaccion) throws VendingMachineException {
 		if (currentTransaccion.getTransactionCash() <= currentTransaccion.getTransactionAmount()) {
-			throw new InvalidaStateVMException("No enough money for the transaction");
+			throw new InvalidStateVMException("No enough money for the transaction");
 		}
 		double changeAmount = currentTransaccion.getTransactionCash() - currentTransaccion.getTransactionAmount();
 		Map<PaymentMethod,Integer> change = calculateChange(changeAmount);

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.cr.proximity.vendingmachine.dao.TransactionVMRepository;
 import com.cr.proximity.vendingmachine.dao.entities.TransactionVMEntity;
 import com.cr.proximity.vendingmachine.exceptions.BadRequestException;
-import com.cr.proximity.vendingmachine.exceptions.InvalidaStateVMException;
+import com.cr.proximity.vendingmachine.exceptions.InvalidStateVMException;
 import com.cr.proximity.vendingmachine.exceptions.VendingMachineException;
 import com.cr.proximity.vendingmachine.machine.VendingMachineInterface;
 import com.cr.proximity.vendingmachine.model.Item;
@@ -91,7 +91,7 @@ public class TransactionsServiceImpl implements TransactionsService {
 		}
 		ItemStock itStk = machineState.getItemStock(item.getCode());
 		if (itStk==null || itStk.getQuantity() < countItemsTrx(item.getCode()) + 1) {
-			throw new InvalidaStateVMException("Stock not available for the item selected");
+			throw new InvalidStateVMException("Stock not available for the item selected");
 		}
 		currentTransaccion.getItems().add(itStk.getItem());	
 		currentTransaccion.setTransactionAmount(currentTransaccion.getTransactionAmount() + itStk.getItem().getUnitPrice());
@@ -134,17 +134,17 @@ public class TransactionsServiceImpl implements TransactionsService {
 	/**
 	 * 
 	 * @param currentTransaccion
-	 * @throws InvalidaStateVMException
+	 * @throws InvalidStateVMException
 	 */
-	private void validateTransaction(ItemTransaction currentTransaccion) throws InvalidaStateVMException {
+	private void validateTransaction(ItemTransaction currentTransaccion) throws InvalidStateVMException {
 		if (currentTransaccion==null) {
-			throw new InvalidaStateVMException("No transaction present");
+			throw new InvalidStateVMException("No transaction present");
 		}
 		if (currentTransaccion.getItems().isEmpty()) {
-			throw new InvalidaStateVMException("Transaction has no items selected");
+			throw new InvalidStateVMException("Transaction has no items selected");
 		}
 		if (currentTransaccion.getPaymentMethod()==null) {
-			throw new InvalidaStateVMException("Transaction has no payment method selected");
+			throw new InvalidStateVMException("Transaction has no payment method selected");
 		}
 	}
 
