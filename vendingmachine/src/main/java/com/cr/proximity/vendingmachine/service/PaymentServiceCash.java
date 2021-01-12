@@ -12,7 +12,6 @@ import com.cr.proximity.vendingmachine.exceptions.PaymentException;
 import com.cr.proximity.vendingmachine.exceptions.VendingMachineException;
 import com.cr.proximity.vendingmachine.machine.VendingMachineInterface;
 import com.cr.proximity.vendingmachine.model.ItemTransaction;
-import com.cr.proximity.vendingmachine.model.State;
 import com.cr.proximity.vendingmachine.model.transaction.PaymentMethod;
 import com.cr.proximity.vendingmachine.state.MachineState;
 
