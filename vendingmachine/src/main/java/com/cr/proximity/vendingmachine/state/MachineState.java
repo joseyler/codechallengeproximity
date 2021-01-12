@@ -137,5 +137,19 @@ public class MachineState {
 		this.creditCardInfo = creditCardInfo;
 	}
 	
+	/**
+	 * 
+	 * @param code
+	 * @return
+	 */
+	public ItemStock getItemStock(Integer code) {
+		for (ItemStock itemStock : itemsStock) {
+			if (itemStock.getItem().getCode().equals(code)) {
+				return itemStock;
+			}
+		}
+		return null;
+	}
+	
 	
 }

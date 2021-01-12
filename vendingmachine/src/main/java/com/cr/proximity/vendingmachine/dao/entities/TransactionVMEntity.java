@@ -1,4 +1,4 @@
-package com.cr.proximity.vendingmachine.dao;
+package com.cr.proximity.vendingmachine.dao.entities;
 
 import java.util.Date;
 
@@ -34,6 +34,9 @@ public class TransactionVMEntity {
 	
 	@Column(name="payment_method_reference",length = 200)
 	private String paymentMethodReference;
+	
+	@Column(name="registered")
+	private boolean registered;
 
 	/**
 	 * @return the id
@@ -131,6 +134,20 @@ public class TransactionVMEntity {
 	 */
 	public void setPaymentMethodReference(String paymentMethodReference) {
 		this.paymentMethodReference = paymentMethodReference;
+	}
+
+	/**
+	 * @return the registered
+	 */
+	public boolean isRegistered() {
+		return registered;
+	}
+
+	/**
+	 * @param registered the registered to set
+	 */
+	public void setRegistered(boolean registered) {
+		this.registered = registered;
 	}
 	
 	

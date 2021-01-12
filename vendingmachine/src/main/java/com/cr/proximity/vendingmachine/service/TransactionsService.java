@@ -28,4 +28,10 @@ public interface TransactionsService {
 	 */
 	public ItemTransaction endTransaction()  throws VendingMachineException;
 
+	/**
+	 * 
+	 * @throws VendingMachineException
+	 */
+	public void processTransactions() throws VendingMachineException;
+
 }

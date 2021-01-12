@@ -10,6 +10,7 @@ import com.cr.proximity.vendingmachine.exceptions.BadRequestException;
 import com.cr.proximity.vendingmachine.exceptions.InvalidaStateVMException;
 import com.cr.proximity.vendingmachine.exceptions.VendingMachineException;
 import com.cr.proximity.vendingmachine.model.Item;
+import com.cr.proximity.vendingmachine.model.ItemStock;
 import com.cr.proximity.vendingmachine.model.ItemTransaction;
 import com.cr.proximity.vendingmachine.model.transaction.Payment;
 import com.cr.proximity.vendingmachine.model.transaction.PaymentMethod;
@@ -70,7 +71,23 @@ public class TransactionServiceXYZ1Impl implements TransactionsService {
 			currentTransaccion = new ItemTransaction();
 			machineState.setCurrentTransaccion(currentTransaccion);
 		}
-		currentTransaccion.getItems().add(item);
+		ItemStock itStk = machineState.getItemStock(item.getCode());
+		if (itStk==null || itStk.getQuantity() < countItemsTrx(item.getCode()) + 1) {
+			throw new InvalidaStateVMException("Stock not available for the item selected");
+		}
+		currentTransaccion.getItems().add(itStk.getItem());	
+		currentTransaccion.setTransactionAmount(currentTransaccion.getTransactionAmount() + itStk.getItem().getUnitPrice());
+	}
+
+
+	private int countItemsTrx(Integer code) {
+		int quantity = 0;
+		for (Item item : machineState.getCurrentTransaccion().getItems()) {
+			if (item.getCode().equals(code)) {
+				quantity++;
+			}
+		}
+		return quantity;
 	}
 
 
@@ -79,7 +96,6 @@ public class TransactionServiceXYZ1Impl implements TransactionsService {
 		ItemTransaction currentTransaccion = machineState.getCurrentTransaccion();
 		validateTransaction(currentTransaccion);
 		paymentServiceStrategy.getPaymentService(currentTransaccion.getPaymentMethod()).cashout(currentTransaccion);
-		
 		return currentTransaccion;
 	}
 
@@ -98,6 +114,13 @@ public class TransactionServiceXYZ1Impl implements TransactionsService {
 		if (currentTransaccion.getPaymentMethod()==null) {
 			throw new InvalidaStateVMException("Transaction has no payment method selected");
 		}
+	}
+
+
+	@Override
+	public void processTransactions() throws VendingMachineException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

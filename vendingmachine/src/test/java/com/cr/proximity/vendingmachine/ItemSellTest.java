@@ -110,7 +110,17 @@ public class ItemSellTest {
                 .andExpect(status().isCreated());
         
         
+        Item item = new Item();
+        item.setCode(4558);
+        this.mockMvc.perform(post("/v1/vmachine/item").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsBytes(item)))
+        .andExpect(status().isCreated());
         
+        
+     
+        this.mockMvc.perform(post("/v1/vmachine/finalize").contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isCreated());
+        
+        machineState.printMachineState();
     }
 
 }

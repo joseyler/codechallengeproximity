@@ -66,8 +66,12 @@ public class PaymentServiceCash implements PaymentService {
 		for (Entry<PaymentMethod, Integer> changeItem : change.entrySet()) {
 			//return x quantity of a payment method
 			vendingMachineInterface.returnCash(changeItem.getKey().getCode(),changeItem.getValue());
+			
+			//update chash info at current state
+			this.machineState.getCashStock().put(changeItem.getKey(),this.machineState.getCashStock().get(changeItem.getKey()) -1);
+			this.machineState.setCurrentCash(this.machineState.getCurrentCash() - changeItem.getKey().getAmount());
 		}
-		
+		currentTransaccion.setTransactionCash(0.0);
 	}
 
 	private Map<PaymentMethod, Integer> calculateChange(double changeAmount) {

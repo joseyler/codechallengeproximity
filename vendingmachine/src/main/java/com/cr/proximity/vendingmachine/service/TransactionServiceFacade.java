@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import com.cr.proximity.vendingmachine.dao.TransactionVMEntity;
 import com.cr.proximity.vendingmachine.dao.TransactionVMRepository;
+import com.cr.proximity.vendingmachine.dao.entities.TransactionVMEntity;
 import com.cr.proximity.vendingmachine.exceptions.VendingMachineException;
 import com.cr.proximity.vendingmachine.model.Item;
 import com.cr.proximity.vendingmachine.model.ItemTransaction;
@@ -81,6 +81,12 @@ public class TransactionServiceFacade implements TransactionsService {
 			transactionVMRepository.save(trxEntity);
 		}
 		return itemTrx;
+	}
+
+	@Override
+	public void processTransactions() throws VendingMachineException {
+		transactionVMRepository.findByRegistered(false);
+		
 	}
 
 }
