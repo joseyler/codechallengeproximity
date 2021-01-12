@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.cr.proximity.vendingmachine.model.Item;
+
 /**
  * Simulate interactions whith hardware in the machine
  * @author josey
@@ -21,6 +23,10 @@ public class VendingMachineInterface {
 	 */
 	public void returnCash(int paymentMethodCode, Integer quantity) {
 		LOGGER.info("Returns " + quantity + " times cash the payment method code " + paymentMethodCode);
+	}
+
+	public void expend(Item item) {
+		LOGGER.info("Expends one  " + item.getName());
 	}
 
 }

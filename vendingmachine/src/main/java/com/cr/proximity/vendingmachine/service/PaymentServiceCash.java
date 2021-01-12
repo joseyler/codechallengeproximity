@@ -1,5 +1,7 @@
 package com.cr.proximity.vendingmachine.service;
 
+import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -74,11 +76,24 @@ public class PaymentServiceCash implements PaymentService {
 		currentTransaccion.setTransactionCash(0.0);
 	}
 
-	private Map<PaymentMethod, Integer> calculateChange(double changeAmount) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	private Map<PaymentMethod, Integer> calculateChange(double changeAmount) throws VendingMachineException {
+		double diff = changeAmount;
+		Map<PaymentMethod, Integer> change = new EnumMap<PaymentMethod, Integer>(PaymentMethod.class);
+		List<PaymentMethod> coins = PaymentMethod.getCoins();
+		for (PaymentMethod c : coins) {
+			Integer coinTimes = (int) Math.floor(diff / c.getAmount());
+			while (coinTimes > this.machineState.getCashStock().get(c)) {
+				coinTimes--;
+			}
+			diff -= c.getAmount() * coinTimes;
 
+			if(coinTimes > 0) {
+				change.put(c, coinTimes);			
+			}
+		}
+
+		return change;
+	}
 	 
 	
 }

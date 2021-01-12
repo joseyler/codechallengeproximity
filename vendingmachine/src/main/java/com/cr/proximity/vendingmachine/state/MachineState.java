@@ -154,6 +154,13 @@ public class MachineState {
 	
 	
 	public void initializeMachine() {
+		
+		this.itemsStock = new ArrayList<ItemStock>();
+		this.currentCash = 0D;
+		this.currentState = State.READY;
+		this.cashStock = new EnumMap<PaymentMethod, Integer>(PaymentMethod.class);
+		
+		
 		this.getCashStock().put(PaymentMethod.CENTS_5,50);
 		this.getCashStock().put(PaymentMethod.CENTS_10,50);
 		this.getCashStock().put(PaymentMethod.CENTS_25,50);
@@ -194,6 +201,15 @@ public class MachineState {
 		this.getItemsStock().add(itStk);
 		
 		this.printMachineState();
+	}
+	
+	/**
+	 * 
+	 * @param item
+	 */
+	public void removeStock(Item item) {
+		ItemStock itemStock = getItemStock(item.getCode());
+		itemStock.setQuantity(itemStock.getQuantity()-1);
 	}
 	
 }

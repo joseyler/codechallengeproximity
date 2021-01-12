@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,9 +32,21 @@ public class VendingMachineController extends AbstractVMController {
 		this.transactionSevice = transactionSevice;
 	}
 	
+	
+	@GetMapping(value = "/state", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Object> getCurrentState() {
+        try {
+        	transactionSevice.printCurrentState();
+            return new ResponseEntity<Object>( HttpStatus.OK);
+        } catch (VendingMachineException vme) {
+            return processVMException(vme);
+        }
+    }
+	
 	@PutMapping(value = "/initialize", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Object> addCash() {
+    public ResponseEntity<Object> initializeMachine() {
         try {
         	transactionSevice.initializeMachine();
             return new ResponseEntity<Object>( HttpStatus.OK);
