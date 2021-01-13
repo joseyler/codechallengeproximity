@@ -1,4 +1,4 @@
-package com.cr.proximity.salesadmin.exceptions;
+package com.cr.proximity.salesadministration.exceptions;
 
 public class SalesAdministrarionException extends Exception {
 

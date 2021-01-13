@@ -12,7 +12,7 @@
      <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>/var/logs/vendingmachine.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>/var/logs//vendingmachine.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>/var/logs/vendingmachine.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <!-- each archived file, size max 10MB -->
             <maxFileSize>10MB</maxFileSize>
             <!-- total size of all archive files, if total size > 20GB, it will delete old archived file -->

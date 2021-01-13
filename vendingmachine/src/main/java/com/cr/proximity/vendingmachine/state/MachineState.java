@@ -191,7 +191,7 @@ public class MachineState {
 		this.getItemsStock().add(itStk);
 		
 		it = new Item();
-		it.setCode(4332);
+		it.setCode(7555);
 		it.setName("Sprite");
 		it.setUnitPrice(0.8);
 		it.setId(3);

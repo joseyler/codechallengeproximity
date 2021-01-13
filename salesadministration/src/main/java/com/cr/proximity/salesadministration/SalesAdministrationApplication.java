@@ -1,4 +1,4 @@
-package com.cr.proximity.salesadmin;
+package com.cr.proximity.salesadministration;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
