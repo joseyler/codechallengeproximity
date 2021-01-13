@@ -20,6 +20,7 @@ Dentro de cada aplicación existen requerimientos no alcanzados, supuestos y fun
     No se implementa la funcionalidad asociada a la apertura de la máquina
     No se implementa la funcionalidad de impresión de Tickets
     Si bien se persisten todas las transacciones, no existen consultas de transacciones por algún criterio implementadas.
+    No se implementó el patron State dentro de la machine.
     
 ## Decisiones arquitecturales:
     La aplicacion cuenta con tres capas definidas, la capa de REST como interface de entrada, lógica del negocio en la capa de servicios y persistencia de datos en la capa de dao
