@@ -42,50 +42,6 @@ public class TransactionsTest {
     @BeforeEach
     public void setUpMock() throws Exception {
         mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        Item it = new Item();
-        it.setCode(4558);
-        it.setName("Coke");
-        this.mockMvc.perform(post("/v1/items").contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content(objectMapper.writeValueAsString(it)))
-        		.andExpect(status().isCreated()).andDo(MockMvcResultHandlers.print());
-        
-        it = new Item();
-        it.setCode(4332);
-        it.setName("Diet-Coke");
-        this.mockMvc.perform(post("/v1/items").contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content(objectMapper.writeValueAsString(it)))
-        		.andExpect(status().isCreated()).andDo(MockMvcResultHandlers.print());
-        
-        it = new Item();
-        it.setCode(7555);
-        it.setName("Sprite");
-        this.mockMvc.perform(post("/v1/items").contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content(objectMapper.writeValueAsString(it)))
-        		.andExpect(status().isCreated()).andDo(MockMvcResultHandlers.print());
-        
-        PaymentMethod paymentMethod = new PaymentMethod();
-        paymentMethod.setId(1);
-        paymentMethod.setName("Cash");
-        this.mockMvc.perform(post("/v1/paymentsmethod").contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content(objectMapper.writeValueAsString(paymentMethod)))
-		.andExpect(status().isCreated()).andDo(MockMvcResultHandlers.print());
-        
-        paymentMethod = new PaymentMethod();
-        paymentMethod.setId(2);
-        paymentMethod.setName("Credit Card");
-        this.mockMvc.perform(post("/v1/paymentsmethod").contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content(objectMapper.writeValueAsString(paymentMethod)))
-		.andExpect(status().isCreated()).andDo(MockMvcResultHandlers.print());
-        
-        
-        VendingMachine vendingMachine = new VendingMachine();
-        vendingMachine.setId(458);
-        vendingMachine.setModel("XYZ1");
-        vendingMachine.setLocation("Downtown Office");
-        this.mockMvc.perform(post("/v1/vendingmachines").contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content(objectMapper.writeValueAsString(vendingMachine)))
-		.andExpect(status().isCreated()).andDo(MockMvcResultHandlers.print());
-        
-        vendingMachine = new VendingMachine();
-        vendingMachine.setId(15223);
-        vendingMachine.setModel("XYZ2");
-        vendingMachine.setLocation("Downtown Office");
-        this.mockMvc.perform(post("/v1/vendingmachines").contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content(objectMapper.writeValueAsString(vendingMachine)))
-		.andExpect(status().isCreated()).andDo(MockMvcResultHandlers.print());
     }
 
 	

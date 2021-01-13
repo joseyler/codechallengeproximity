@@ -1,7 +1,10 @@
 package com.cr.proximity.salesadministration.dao.entities.mappers;
 
 import com.cr.proximity.salesadministration.dao.entities.TransactionEntity;
+import com.cr.proximity.salesadministration.model.Item;
+import com.cr.proximity.salesadministration.model.PaymentMethod;
 import com.cr.proximity.salesadministration.model.SaleTransaction;
+import com.cr.proximity.salesadministration.model.VendingMachine;
 
 public class SaleTransactionMapper {
 	
@@ -31,11 +34,14 @@ public class SaleTransactionMapper {
 		SaleTransaction saleTransaction = new SaleTransaction();
 		saleTransaction.setAmount(trxEntity.getAmount());
 		saleTransaction.setId(trxEntity.getId());
-		saleTransaction.setItem(ItemMapper.mapModel(trxEntity.getItem()));
+		saleTransaction.setItem(new Item());
+		saleTransaction.getItem().setId(trxEntity.getItemId());
 		saleTransaction.setPaymentExternalReference(saleTransaction.getPaymentExternalReference());
-		saleTransaction.setPaymentMethod(PaymentMethodMapper.mapModel(trxEntity.getPaymentMethod()));
+		saleTransaction.setPaymentMethod(new PaymentMethod());
+		saleTransaction.getPaymentMethod().setId(trxEntity.getPaymentMethodId());
 		saleTransaction.setTransactionDate(trxEntity.getTransactionDate());
-		saleTransaction.setVendingMachine(VendingMachineMapper.mapModel(trxEntity.getVendingMachine()));
+		saleTransaction.setVendingMachine(new VendingMachine());
+		saleTransaction.getVendingMachine().setId(trxEntity.getVendingMachineId());
 		return saleTransaction;
 	}
 

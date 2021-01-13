@@ -28,6 +28,8 @@ public class MachineState {
 	private Map<PaymentMethod,Integer> cashStock;
 	private ItemTransaction currentTransaccion;
 	private CreditCardInfo creditCardInfo;
+
+	private Double initialCash;
 	
 	
 	
@@ -106,7 +108,6 @@ public class MachineState {
 		LOGGER.info("STOCK");
 		for (ItemStock itStk:this.itemsStock) {
 			LOGGER.info(itStk.getQuantity().toString() + " units of " + itStk.getItem().getName());
-			
 		}
 		LOGGER.info("");
 		LOGGER.info("TOTAL CASH: " + this.countCurrentCash());
@@ -200,6 +201,8 @@ public class MachineState {
 		itStk.setQuantity(20);
 		this.getItemsStock().add(itStk);
 		
+		this.initialCash = this.countCurrentCash();
+		
 		this.printMachineState();
 	}
 	
@@ -210,6 +213,18 @@ public class MachineState {
 	public void removeStock(Item item) {
 		ItemStock itemStock = getItemStock(item.getCode());
 		itemStock.setQuantity(itemStock.getQuantity()-1);
+	}
+	/**
+	 * @return the initialCash
+	 */
+	public Double getInitialCash() {
+		return initialCash;
+	}
+	/**
+	 * @param initialCash the initialCash to set
+	 */
+	public void setInitialCash(Double initialCash) {
+		this.initialCash = initialCash;
 	}
 	
 }

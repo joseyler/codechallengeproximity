@@ -19,6 +19,7 @@ public class TransactionsProcessorTask extends QuartzJobBean {
         try {
             LOGGER.info("##############  Processing transactions  ##############");
             transactionsService.processTransactions();
+            transactionsService.evaluateAlerts();
         } catch (VendingMachineException e) {
             LOGGER.trace(e.getMessage(), e);
         } catch (Exception ex) {

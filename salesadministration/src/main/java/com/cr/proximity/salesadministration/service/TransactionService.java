@@ -14,15 +14,26 @@ public class TransactionService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TransactionService.class);
 
 	private TransactionsDao transactionsDao;
+	private VendingMachineService vendingMachineService;
+	private PaymentsService paymentsService;
+	private ItemsService itemsService;
 
-	public TransactionService(TransactionsDao transactionsDao) {
+	public TransactionService(TransactionsDao transactionsDao,PaymentsService paymentsService,ItemsService itemsService,
+				VendingMachineService vendingMachineService) {
 		this.transactionsDao = transactionsDao;
+		this.itemsService = itemsService;
+		this.paymentsService = paymentsService;
+		this.vendingMachineService = vendingMachineService;
 	}
 
 	public SaleTransaction registerTransaction(SaleTransaction saleTransaction) throws SalesAdministrarionException {
 		try {
 			SaleTransaction saved = transactionsDao.saveTransaction(saleTransaction);
-			return transactionsDao.getTransactionById(saved.getId());
+			SaleTransaction transactionById = transactionsDao.getTransactionById(saved.getId());
+			transactionById.setItem(itemsService.getItem(transactionById.getItem().getId()));
+			transactionById.setPaymentMethod(paymentsService.getPaymentMethod(transactionById.getPaymentMethod().getId()));
+			transactionById.setVendingMachine(vendingMachineService.getVendingMachine(transactionById.getVendingMachine().getId()));
+			return transactionById;
 		} catch (SalesAdministrarionException e) {
 			throw e;
 		} catch (Exception e) {

@@ -6,7 +6,12 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.cr.proximity.vendingmachine.dao.TransactionVMRepository;
 import com.cr.proximity.vendingmachine.dao.entities.TransactionVMEntity;
@@ -17,9 +22,12 @@ import com.cr.proximity.vendingmachine.machine.VendingMachineInterface;
 import com.cr.proximity.vendingmachine.model.Item;
 import com.cr.proximity.vendingmachine.model.ItemStock;
 import com.cr.proximity.vendingmachine.model.ItemTransaction;
+import com.cr.proximity.vendingmachine.model.salesadmin.SaleTransaction;
+import com.cr.proximity.vendingmachine.model.salesadmin.VendingMachine;
 import com.cr.proximity.vendingmachine.model.transaction.Payment;
 import com.cr.proximity.vendingmachine.model.transaction.PaymentMethod;
 import com.cr.proximity.vendingmachine.state.MachineState;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service("TransactionsService")
 public class TransactionsServiceImpl implements TransactionsService {
@@ -37,15 +45,18 @@ public class TransactionsServiceImpl implements TransactionsService {
 	TransactionVMRepository transactionVMRepository;
 	
 	VendingMachineInterface vendingMachineInterface;
+	
+	ObjectMapper objectMapper;
 
 	public TransactionsServiceImpl(Environment environment, PaymentServiceStrategy paymentServiceStrategy,
-			MachineState machineState, TransactionVMRepository transactionVMRepository,VendingMachineInterface vendingMachineInterface) {
+			MachineState machineState, TransactionVMRepository transactionVMRepository,VendingMachineInterface vendingMachineInterface,ObjectMapper objectMapper) {
 		super();
 		this.environment = environment;
 		this.paymentServiceStrategy = paymentServiceStrategy;
 		this.machineState = machineState;
 		this.transactionVMRepository = transactionVMRepository;
 		this.vendingMachineInterface = vendingMachineInterface;
+		this.objectMapper = objectMapper;
 		configure();
 	}
 
@@ -120,7 +131,7 @@ public class TransactionsServiceImpl implements TransactionsService {
 		for (Item item : currentTransaccion.getItems()) {
 			TransactionVMEntity trxEntity = new TransactionVMEntity();
 			trxEntity.setAmount(currentTransaccion.getTransactionAmount());
-			trxEntity.setIdItem(item.getCode());
+			trxEntity.setIdItem(item.getId());
 			trxEntity.setPaymentMethodId(currentTransaccion.getPaymentMethod().getCode());
 			trxEntity.setPaymentMethodReference(currentTransaccion.getExternalReference());
 			trxEntity.setQuantity(1);
@@ -152,9 +163,50 @@ public class TransactionsServiceImpl implements TransactionsService {
 	public void processTransactions() throws VendingMachineException {
 		List<TransactionVMEntity> trxs = transactionVMRepository.findByRegistered(false);
 		for (TransactionVMEntity trx : trxs) {
-			//trx.se
+			processTrx(trx);
 		}
 		
+	}
+
+	private void processTrx(TransactionVMEntity trx) {
+		try {
+			SaleTransaction salesAdminTrx = buildSalesAdminTrx(trx);
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			HttpEntity<SaleTransaction> postSales = new HttpEntity<SaleTransaction>(salesAdminTrx, headers);
+			String url = environment.getProperty("sales.admin.url.base") + "/sales/transaction";
+			RestTemplate restt = new  RestTemplate();
+			SaleTransaction body = restt.exchange(url,HttpMethod.POST, postSales,SaleTransaction.class).getBody();
+			saveAsRegistered(trx);
+			LOGGER.info("TRX processed" + objectMapper.writeValueAsString(body));
+			trx.setRegistered(true);
+		} catch (Exception e) {
+			LOGGER.error("Unable to process transaction " + trx.getId());
+			LOGGER.error(e.getMessage(),e);
+		}
+	}
+
+	private void saveAsRegistered(TransactionVMEntity trx) {
+		trx.setRegistered(true);
+		transactionVMRepository.save(trx);
+	}
+
+	private SaleTransaction buildSalesAdminTrx(TransactionVMEntity trx) {
+		SaleTransaction saleTrx = new SaleTransaction();
+		saleTrx.setAmount(trx.getAmount());
+		saleTrx.setItem(new com.cr.proximity.vendingmachine.model.salesadmin.Item());
+		saleTrx.getItem().setId(trx.getIdItem());
+		saleTrx.setPaymentExternalReference(trx.getPaymentMethodReference());
+		saleTrx.setPaymentMethod(new com.cr.proximity.vendingmachine.model.salesadmin.PaymentMethod());
+		if (PaymentMethod.getPaymentMethod(trx.getPaymentMethodId()).isCash()) {
+			saleTrx.getPaymentMethod().setId(1);
+		} else {
+			saleTrx.getPaymentMethod().setId(2);
+		}
+		saleTrx.setTransactionDate(trx.getTransactionDate());
+		saleTrx.setVendingMachine(new VendingMachine());
+		saleTrx.getVendingMachine().setId(Integer.valueOf(environment.getProperty("vending.machine.id")));
+		return saleTrx;
 	}
 
 	@Override
@@ -165,6 +217,25 @@ public class TransactionsServiceImpl implements TransactionsService {
 	@Override
 	public void printCurrentState() throws VendingMachineException {
 		this.machineState.printMachineState();
+	}
+
+	@Override
+	public void evaluateAlerts() throws VendingMachineException {
+		Double currentCash = machineState.countCurrentCash();
+		if (currentCash - machineState.getInitialCash() > 100) {
+			try {
+				HttpHeaders headers = new HttpHeaders();
+				headers.setContentType(MediaType.APPLICATION_JSON);
+				HttpEntity<String> alert = new HttpEntity<String>(headers);
+				String url = environment.getProperty("sales.admin.url.base") + "/alerts/"+environment.getProperty("vending.machine.id") + "/cashcollect";
+				RestTemplate restt = new  RestTemplate();
+				restt.exchange(url,HttpMethod.POST, alert,SaleTransaction.class).getBody();
+				LOGGER.info("Alert money sent processed");
+			} catch (Exception e) {
+				LOGGER.error("Unable to send alert");
+				LOGGER.error(e.getMessage(),e);
+			}
+		}
 	}
 
 }

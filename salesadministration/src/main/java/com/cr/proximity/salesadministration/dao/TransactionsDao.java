@@ -46,13 +46,10 @@ public class TransactionsDao {
 		try {
 			StringBuilder queryStr = new StringBuilder();
 			queryStr.append(" select trx from TransactionEntity trx ");
-			queryStr.append(" join fetch trx.paymentMethod  ");
-			queryStr.append(" join fetch trx.item  ");
-			queryStr.append(" join fetch trx.vendingMachine  ");
 			queryStr.append(" where  trx.id = :id ");
 			TypedQuery<TransactionEntity> query = entityManager.createQuery(queryStr.toString(), TransactionEntity.class);
 			query.setParameter("id", saleTransactionId);
-			TransactionEntity trxEntity = query.getResultList().get(0);
+			TransactionEntity trxEntity = query.getSingleResult();
 			return SaleTransactionMapper.mapModelComplete(trxEntity);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(),e);

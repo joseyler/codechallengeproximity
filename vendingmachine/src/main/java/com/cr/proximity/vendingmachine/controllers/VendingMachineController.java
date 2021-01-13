@@ -1,7 +1,5 @@
 package com.cr.proximity.vendingmachine.controllers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,8 +20,6 @@ import com.cr.proximity.vendingmachine.service.TransactionsService;
 @RestController
 @RequestMapping("/v1/vmachine")
 public class VendingMachineController extends AbstractVMController {
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(VendingMachineController.class);
 	
 	TransactionsService transactionSevice;
 	
@@ -82,6 +78,18 @@ public class VendingMachineController extends AbstractVMController {
     public ResponseEntity<Object> endTransaction() {
         try {
         	transactionSevice.endTransaction();
+            return new ResponseEntity<Object>( HttpStatus.CREATED);
+        } catch (VendingMachineException vme) {
+            return processVMException(vme);
+        }
+    }
+	
+	
+	@PostMapping(value = "/evaluatealerts", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Object> evaluateAlerts() {
+        try {
+        	transactionSevice.evaluateAlerts();
             return new ResponseEntity<Object>( HttpStatus.CREATED);
         } catch (VendingMachineException vme) {
             return processVMException(vme);

@@ -36,18 +36,6 @@ public class TransactionEntity {
 	
 	@Column(name="id_vending_machine")
 	private int vendingMachineId;
-	
-	@ManyToOne
-    @JoinColumn(updatable=false,insertable=false, name="id_item", referencedColumnName="id")
-    private ItemEntity item;
-	
-	@ManyToOne
-    @JoinColumn(updatable=false,insertable=false, name="id_payment_menthod", referencedColumnName="id")
-    private PaymentMethodEntity paymentMethod;
-	
-	@ManyToOne
-    @JoinColumn(updatable=false,insertable=false, name="id_vending_machine", referencedColumnName="id")
-    private VendingMachineEntity vendingMachine;
 
 	/**
 	 * @return the id
@@ -147,48 +135,6 @@ public class TransactionEntity {
 		this.vendingMachineId = vendingMachineId;
 	}
 
-	/**
-	 * @return the item
-	 */
-	public ItemEntity getItem() {
-		return item;
-	}
-
-	/**
-	 * @param item the item to set
-	 */
-	public void setItem(ItemEntity item) {
-		this.item = item;
-	}
-
-	/**
-	 * @return the paymentMethod
-	 */
-	public PaymentMethodEntity getPaymentMethod() {
-		return paymentMethod;
-	}
-
-	/**
-	 * @param paymentMethod the paymentMethod to set
-	 */
-	public void setPaymentMethod(PaymentMethodEntity paymentMethod) {
-		this.paymentMethod = paymentMethod;
-	}
-
-	/**
-	 * @return the vendingMachine
-	 */
-	public VendingMachineEntity getVendingMachine() {
-		return vendingMachine;
-	}
-
-	/**
-	 * @param vendingMachine the vendingMachine to set
-	 */
-	public void setVendingMachine(VendingMachineEntity vendingMachine) {
-		this.vendingMachine = vendingMachine;
-	}
-	
 	
 
 }
